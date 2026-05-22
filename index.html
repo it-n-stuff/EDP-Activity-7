@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>School Library Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" />
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: LOGIN
+═══════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-login">
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6.04C10.41 4.62 8.31 3.75 6 3.75c-1.05 0-2.06.18-3 .51v14.25C3.94 18.18 4.95 18 6 18c2.31 0 4.41.87 6 2.29m0-14.25c1.59-1.42 3.69-2.29 6-2.29 1.05 0 2.06.18 3 .51v14.25c-.94-.33-1.95-.51-3-.51-2.31 0-4.41.87-6 2.29m0-14.25v14.25"/>
+          </svg>
+        </div>
+        <div class="auth-logo-text">
+          <h1>LIBRI</h1>
+          <span>School Library Management System</span>
+        </div>
+      </div>
+      <h2>Welcome back</h2>
+      <p class="auth-sub">Sign in with your staff credentials to continue.</p>
+      <div id="login-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="login-alert-msg"></span>
+      </div>
+      <div class="field">
+        <label>Username</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          <input type="text" id="login-user" placeholder="Enter your username" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          <input type="password" id="login-pass" placeholder="Enter your password" />
+          <button class="pw-toggle" onclick="togglePw('login-pass',this)" type="button">
+            <svg viewBox="0 0 24 24" id="login-eye"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
+        <label class="check-row">
+          <input type="checkbox" id="login-remember" /> Remember me
+        </label>
+        <a onclick="showPage('page-recover')" style="font-size:13px;color:var(--brown);cursor:pointer;font-weight:600">Forgot password?</a>
+      </div>
+      <button class="btn btn-primary" onclick="doLogin()">
+        <svg viewBox="0 0 24 24"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+        Sign In
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: PASSWORD RECOVERY
+═══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-recover">
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6.04C10.41 4.62 8.31 3.75 6 3.75c-1.05 0-2.06.18-3 .51v14.25C3.94 18.18 4.95 18 6 18c2.31 0 4.41.87 6 2.29m0-14.25c1.59-1.42 3.69-2.29 6-2.29 1.05 0 2.06.18 3 .51v14.25c-.94-.33-1.95-.51-3-.51-2.31 0-4.41.87-6 2.29m0-14.25v14.25"/>
+          </svg>
+        </div>
+        <div class="auth-logo-text">
+          <h1>LIBRI</h1>
+          <span>School Library Management System</span>
+        </div>
+      </div>
+      <div id="recover-step1">
+        <h2>Forgot Password</h2>
+        <p class="auth-sub">Enter your username to verify your account and reset your password.</p>
+        <div id="recover-step1-alert" style="display:none" class="alert alert-red">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          <span id="recover-step1-msg"></span>
+        </div>
+        <div class="field">
+          <label>Username</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            <input type="text" id="rec-user" placeholder="Enter your username" />
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="doRecover()" style="margin-bottom:16px">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          Verify Account
+        </button>
+      </div>
+      <div id="recover-step2" style="display:none">
+        <div style="text-align:center;padding:10px 0 20px">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <svg style="width:32px;height:32px;fill:#fff" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          </div>
+          <h2 style="font-size:22px">Account Verified</h2>
+          <p style="color:var(--muted);font-size:13px;margin-top:8px">Account found for <strong id="rec-name"></strong>. Enter and confirm your new password below.</p>
+        </div>
+        <div id="recover-step2-alert" style="display:none" class="alert alert-red">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          <span id="recover-step2-msg"></span>
+        </div>
+        <div class="field">
+          <label>New Password</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            <input type="password" id="rec-newpass" placeholder="Min. 6 characters" />
+            <button class="pw-toggle" onclick="togglePw('rec-newpass',this)" type="button">
+              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirm New Password</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            <input type="password" id="rec-confpass" placeholder="Repeat new password" />
+            <button class="pw-toggle" onclick="togglePw('rec-confpass',this)" type="button">
+              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="doResetPassword()" style="margin-bottom:16px">
+          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          Reset Password
+        </button>
+      </div>
+      <p class="auth-link"><a onclick="showPage('page-login')">← Back to Sign In</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     APP SHELL (Dashboard + all modules)
+═══════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-app">
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6.04C10.41 4.62 8.31 3.75 6 3.75c-1.05 0-2.06.18-3 .51v14.25C3.94 18.18 4.95 18 6 18c2.31 0 4.41.87 6 2.29m0-14.25c1.59-1.42 3.69-2.29 6-2.29 1.05 0 2.06.18 3 .51v14.25c-.94-.33-1.95-.51-3-.51-2.31 0-4.41.87-6 2.29m0-14.25v14.25"/>
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">
+          <h2>LIBRI</h2>
+          <span>Library Management System</span>
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <div class="nav-item active" onclick="switchView('dashboard',this)">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Dashboard
+        </div>
+        <div class="nav-label">Library</div>
+        <div class="nav-item" onclick="switchView('books',this)">
+          <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 16V14h12v6H6zm12-8H13V4h5v8z"/></svg>
+          Books
+        </div>
+        <div class="nav-item" onclick="switchView('borrows',this)">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+          Borrow Records
+        </div>
+        <div class="nav-item" onclick="switchView('students',this)">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          Students
+        </div>
+        <div class="nav-label">System</div>
+        <div class="nav-item" onclick="switchView('reports',this)">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3l4 4h-3v4h-2v-4H8l4-4zm5 12H7v-2h10v2z"/></svg>
+          Reports
+        </div>
+        <div class="nav-item" id="nav-accounts" onclick="switchView('accounts',this)">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          Accounts
+        </div>
+        <div class="nav-item" onclick="switchView('about',this)">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          About
+        </div>
+        <div class="nav-item" onclick="switchView('profile',this)">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          Profile
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <div class="staff-chip">
+          <div class="staff-avatar" id="staff-avatar-text">M</div>
+          <div class="staff-info">
+            <strong id="staff-name">Maea Penrose</strong>
+            <span id="staff-role-label">Staff</span>
+          </div>
+          <button class="logout-btn" onclick="doLogout()" title="Sign out">
+            <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- ── DASHBOARD ── -->
+      <div id="view-dashboard" class="content-area">
+        <div class="page-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back! Here's what's happening in the library today.</p>
+          </div>
+          <div style="font-size:13px;color:var(--muted);background:#fff;padding:8px 14px;border-radius:10px;border:1px solid var(--border)">
+            <span id="dash-date"></span>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon brown">
+              <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 16V14h12v6H6zm12-8H13V4h5v8z"/></svg>
+            </div>
+            <div>
+              <div class="stat-value">10</div>
+              <div class="stat-label">Total Books</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon gold">
+              <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+            <div>
+              <div class="stat-value">10</div>
+              <div class="stat-label">Registered Students</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+            </div>
+            <div>
+              <div class="stat-value">3</div>
+              <div class="stat-label">Currently Borrowed</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon red">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div>
+              <div class="stat-value">3</div>
+              <div class="stat-label">Overdue / Unreturned</div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3>Currently Borrowed Books</h3>
+              <span class="badge badge-red">3 Active</span>
+            </div>
+            <div class="recent-list">
+              <div class="recent-item">
+                <div class="recent-avatar"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+                <div>
+                  <div class="recent-title">Design Patterns</div>
+                  <div class="recent-sub">Pedro Garcia · Since Jan 20, 2026</div>
+                </div>
+                <span class="badge badge-red recent-badge">Unreturned</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-avatar"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+                <div>
+                  <div class="recent-title">Database System Concepts</div>
+                  <div class="recent-sub">Carlo Gomez · Since Jan 25, 2026</div>
+                </div>
+                <span class="badge badge-red recent-badge">Unreturned</span>
+              </div>
+              <div class="recent-item">
+                <div class="recent-avatar"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+                <div>
+                  <div class="recent-title">Data Science for Business</div>
+                  <div class="recent-sub">Mark Fernandez · Since Feb 1, 2026</div>
+                </div>
+                <span class="badge badge-red recent-badge">Unreturned</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Most Popular Books</h3>
+            </div>
+            <div class="recent-list">
+              <div class="recent-item">
+                <div style="font-size:20px;font-weight:800;color:var(--brown);width:28px;text-align:center;flex-shrink:0">#1</div>
+                <div>
+                  <div class="recent-title">Clean Code</div>
+                  <div class="recent-sub">Robert Martin · Prentice Hall</div>
+                </div>
+                <span class="badge badge-gold recent-badge">1 borrow</span>
+              </div>
+              <div class="recent-item">
+                <div style="font-size:20px;font-weight:800;color:var(--muted);width:28px;text-align:center;flex-shrink:0">#2</div>
+                <div>
+                  <div class="recent-title">Effective Java</div>
+                  <div class="recent-sub">Joshua Bloch · Addison-Wesley</div>
+                </div>
+                <span class="badge badge-muted recent-badge">1 borrow</span>
+              </div>
+              <div class="recent-item">
+                <div style="font-size:20px;font-weight:800;color:var(--muted);width:28px;text-align:center;flex-shrink:0">#3</div>
+                <div>
+                  <div class="recent-title">Introduction to Algorithms</div>
+                  <div class="recent-sub">Thomas Cormen · MIT Press</div>
+                </div>
+                <span class="badge badge-muted recent-badge">1 borrow</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BOOKS ── -->
+      <div id="view-books" class="content-area" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1>Books</h1>
+            <p>Manage the library's book collection and authors.</p>
+          </div>
+          <button class="btn btn-green" onclick="openModal('modal-add-book')">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Add Book
+          </button>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this,'tab-books-list')">All Books</div>
+          <div class="tab" onclick="switchTab(this,'tab-books-authors')">Authors</div>
+        </div>
+        <div id="tab-books-list">
+          <div class="card">
+            <div class="card-header">
+              <h3>Book Collection</h3>
+              <div class="search-wrap">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" placeholder="Search books…" oninput="filterTable(this,'tbl-books')" />
+              </div>
+            </div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table id="tbl-books">
+                  <thead><tr>
+                    <th>Book ID</th><th>ISBN</th><th>Title</th><th>Publisher</th><th>Year</th><th>Author(s)</th><th>Actions</th>
+                  </tr></thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-books-authors" style="display:none">
+          <div class="card">
+            <div class="card-header"><h3>Authors</h3></div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Author ID</th><th>First Name</th><th>Last Name</th><th>Books</th></tr></thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BORROW RECORDS ── -->
+      <div id="view-borrows" class="content-area" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1>Borrow Records</h1>
+            <p>Track all book borrowing and return activity.</p>
+          </div>
+          <button class="btn btn-green" onclick="openModal('modal-add-borrow')">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Add Record
+          </button>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this,'tab-borrow-all')">All Records</div>
+          <div class="tab" onclick="switchTab(this,'tab-borrow-active')">Currently Borrowed</div>
+          <div class="tab" onclick="switchTab(this,'tab-borrow-history')">Borrow History</div>
+        </div>
+        <div id="tab-borrow-all">
+          <div class="card">
+            <div class="card-header">
+              <h3>All Borrow Records</h3>
+              <div class="search-wrap">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" placeholder="Search records…" oninput="filterTable(this,'tbl-borrows')" />
+              </div>
+            </div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table id="tbl-borrows">
+                  <thead><tr><th>Borrow ID</th><th>Student</th><th>Book Title</th><th>Borrow Date</th><th>Return Date</th><th>Status</th><th>Actions</th></tr></thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-borrow-active" style="display:none">
+          <div class="card">
+            <div class="card-header"><h3>Currently Borrowed Books</h3><span class="badge badge-red">3 Unreturned</span></div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Borrow ID</th><th>Student No.</th><th>Student Name</th><th>Book Title</th><th>Borrow Date</th><th>Action</th></tr></thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-borrow-history" style="display:none">
+          <div class="card">
+            <div class="card-header"><h3>Student Borrow History</h3></div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Student No.</th><th>Student Name</th><th>Book Title</th><th>Borrow Date</th><th>Return Date</th></tr></thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STUDENTS ── -->
+      <div id="view-students" class="content-area" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1>Students</h1>
+            <p>Manage enrolled students and their library records.</p>
+          </div>
+          <button class="btn btn-green" onclick="openModal('modal-add-student')">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Add Student
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Student Directory</h3>
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <input type="text" placeholder="Search students…" oninput="filterTable(this,'tbl-students')" />
+            </div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="table-wrap">
+              <table id="tbl-students">
+                <thead><tr><th>Student ID</th><th>Student No.</th><th>Full Name</th><th>Year Level</th><th>Course</th><th>Actions</th></tr></thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── REPORTS ── -->
+      <div id="view-reports" class="content-area" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1>Report Generator</h1>
+            <p>Select a report type to generate, preview, and export to Excel.</p>
+          </div>
+        </div>
+
+        <!-- Report Cards -->
+        <div class="report-grid">
+          <div class="report-card" onclick="genReport('borrowed')">
+            <div class="report-card-icon" style="background:linear-gradient(135deg,var(--red),var(--red-lt))">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+            </div>
+            <h4>Currently Borrowed Books</h4>
+            <p>List of all books currently checked out and not yet returned.</p>
+          </div>
+          <div class="report-card" onclick="genReport('popular')">
+            <div class="report-card-icon" style="background:linear-gradient(135deg,var(--brown),var(--brown-lt))">
+              <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </div>
+            <h4>Most Popular Books</h4>
+            <p>Books ranked by number of times borrowed across all records.</p>
+          </div>
+          <div class="report-card" onclick="genReport('books')">
+            <div class="report-card-icon" style="background:linear-gradient(135deg,#2e86ab,#5ec8e5)">
+              <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4zm0 16V14h12v6H6zm12-8H13V4h5v8z"/></svg>
+            </div>
+            <h4>Book Inventory</h4>
+            <p>Complete catalogue of all books in the library collection.</p>
+          </div>
+        </div>
+
+        <!-- Report Output Panel -->
+        <div id="report-output" class="report-output" style="display:none">
+
+          <!-- Report Header -->
+          <div style="background:linear-gradient(135deg,#2c1a0e 0%,#5c3d2e 100%);border-radius:16px;padding:24px 28px;margin-bottom:20px;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden">
+            <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(201,151,58,.18) 0%,transparent 60%)"></div>
+            <!-- Logo -->
+            <div style="width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1">
+              <svg style="width:28px;height:28px;stroke:#fff;fill:none" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.04C10.41 4.62 8.31 3.75 6 3.75c-1.05 0-2.06.18-3 .51v14.25C3.94 18.18 4.95 18 6 18c2.31 0 4.41.87 6 2.29m0-14.25c1.59-1.42 3.69-2.29 6-2.29 1.05 0 2.06.18 3 .51v14.25c-.94-.33-1.95-.51-3-.51-2.31 0-4.41.87-6 2.29m0-14.25v14.25"/>
+              </svg>
+            </div>
+            <div style="position:relative;z-index:1;flex:1">
+              <div style="font-size:11px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">LIBRI · School Library Management System</div>
+              <div id="report-title" style="font-size:20px;font-weight:700;color:#fff;font-family:'PT Serif',serif">Report</div>
+              <div id="report-meta" style="font-size:12px;color:rgba(255,255,255,.6);margin-top:4px"></div>
+            </div>
+            <!-- Excel Export Button -->
+            <button id="btn-export-excel" class="btn btn-outline btn-sm" onclick="exportToExcel()" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff;position:relative;z-index:1;flex-shrink:0">
+              <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;margin-right:6px"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm-4.5 7.5l1.5-2.3 1.5 2.3h1.8l-2.4-3.5 2.3-3.3h-1.8L10 12.3l-1.4-2.1H6.8l2.3 3.3-2.4 3.5h1.8z"/></svg>
+              Export to Excel
+            </button>
+          </div>
+
+          <!-- Data Grid -->
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header">
+              <h3 id="report-datagrid-title">Records</h3>
+              <div class="search-wrap">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="report-search" placeholder="Filter records…" oninput="filterTable(this,'tbl-report')" />
+              </div>
+            </div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table id="tbl-report">
+                  <thead id="tbl-report-head"></thead>
+                  <tbody id="tbl-report-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Signature Placeholder -->
+          <div class="card">
+            <div class="card-header"><h3>Report Authorization</h3></div>
+            <div class="card-body">
+              <p style="font-size:13px;color:var(--muted);margin-bottom:20px">This section will appear in the exported Excel file as the report's authorization signature block.</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:8px">Prepared By</label>
+                  <div class="input-wrap no-icon"><input type="text" id="sig-prepared-by" placeholder="Full name of preparer" /></div>
+                  <div class="input-wrap no-icon" style="margin-top:8px"><input type="text" id="sig-prepared-pos" placeholder="Position / Designation" /></div>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:8px">Approved By</label>
+                  <div class="input-wrap no-icon"><input type="text" id="sig-approved-by" placeholder="Full name of approver" /></div>
+                  <div class="input-wrap no-icon" style="margin-top:8px"><input type="text" id="sig-approved-pos" placeholder="Position / Designation" /></div>
+                </div>
+              </div>
+              <p style="font-size:11px;color:var(--muted);margin-top:14px;font-style:italic">Note: Signature lines will be included in the exported Excel report on Sheet 1.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── ABOUT ── -->
+      <div id="view-about" class="content-area" style="display:none">
+        <div class="about-hero">
+          <h1>School Library Management System</h1>
+          <p>A comprehensive digital solution designed to streamline library operations — from cataloguing books and registering students to managing borrow records and generating insightful reports. Built to support librarians in maintaining an organized, efficient, and modern school library.</p>
+        </div>
+        <div class="page-header" style="margin-bottom:16px">
+          <div><h1 style="font-size:22px">System Features</h1></div>
+        </div>
+        <div class="features-grid" style="margin-bottom:28px">
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,var(--brown),var(--brown-lt))">
+              <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+            </div>
+            <h4>Book Catalogue</h4>
+            <p>Easily add, update, and organize the library's entire book collection. Each entry captures the title, author, publisher, and publication details, giving librarians a clear and searchable catalogue at their fingertips.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,var(--brown-lt),var(--caramel))">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+            </div>
+            <h4>Student Registry</h4>
+            <p>Keep track of all enrolled students along with their academic details. The registry makes it easy to look up any student, confirm their identity, and view a summary of their borrowing activity.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,var(--green),var(--green-lt))">
+              <svg viewBox="0 0 24 24"><path d="M13 12h-2V7h2v5zm0 4h-2v-2h2v2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+            </div>
+            <h4>Smart Borrow Tracking</h4>
+            <p>Ensure accurate and reliable lending records by automatically preventing duplicate checkouts and validating return dates. Librarians can manage borrowing and returns with confidence, knowing the system enforces the rules in the background.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,var(--red),var(--red-lt))">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3l4 4h-3v4h-2v-4H8l4-4zm5 12H7v-2h10v2z"/></svg>
+            </div>
+            <h4>Report Generation</h4>
+            <p>Quickly generate key library reports — including currently borrowed books, most popular titles, full borrow history, and a student summary. Each report can be exported as a PDF for record-keeping or sharing.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#6c4eb5,#9b7fe0)">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </div>
+            <h4>User Authentication</h4>
+            <p>Keep the system secure with a dedicated login portal for authorized users. Supports account registration, password recovery, and a "remember me" option — ensuring only the right people have access to library operations.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#2e86ab,#5ec8e5)">
+              <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+            </div>
+            <h4>Live Dashboard</h4>
+            <p>Get an instant overview of the library's current status — total books, registered students, active borrows, and unreturned items — all displayed at a glance and refreshed in real time whenever data changes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PROFILE ── -->
+      <div id="view-profile" class="content-area" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1>My Profile</h1>
+            <p>Update your personal information and account credentials.</p>
+          </div>
+        </div>
+
+        <!-- Avatar & name banner -->
+        <div style="background:linear-gradient(135deg,#2c1a0e 0%,#5c3d2e 100%);border-radius:20px;padding:32px 36px;display:flex;align-items:center;gap:24px;margin-bottom:28px;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(201,151,58,.18) 0%,transparent 60%)"></div>
+          <div id="profile-big-avatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--brown-lt),var(--caramel));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#fff;flex-shrink:0;position:relative;z-index:1;border:3px solid rgba(255,255,255,.2)">M</div>
+          <div style="position:relative;z-index:1">
+            <div id="profile-banner-name" style="font-size:22px;font-weight:700;color:#fff;font-family:'PT Serif',serif">Maea Penrose</div>
+            <div id="profile-banner-user" style="font-size:13px;color:rgba(255,255,255,.6);margin-top:3px">@admin · Staff</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+          <!-- Personal Information -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Personal Information</h3>
+            </div>
+            <div class="card-body">
+              <div id="profile-info-alert" class="alert alert-green" style="display:none">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                <span id="profile-info-msg"></span>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label>First Name</label>
+                  <div class="input-wrap">
+                    <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                    <input type="text" id="profile-fn" placeholder="First name" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Last Name</label>
+                  <div class="input-wrap no-icon">
+                    <input type="text" id="profile-ln" placeholder="Last name" />
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label>Username</label>
+                <div class="input-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+                  <input type="text" id="profile-username" placeholder="Username" />
+                </div>
+              </div>
+              <div class="field">
+                <label>Email <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+                <div class="input-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                  <input type="email" id="profile-email" placeholder="e.g. you@school.edu" />
+                </div>
+              </div>
+              <button class="btn btn-primary" style="width:auto;padding:11px 24px" onclick="saveProfileInfo()">
+                <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                Save Changes
+              </button>
+            </div>
+          </div>
+
+          <!-- Change Password -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Change Password</h3>
+            </div>
+            <div class="card-body">
+              <div id="profile-pw-alert" class="alert" style="display:none">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                <span id="profile-pw-msg"></span>
+              </div>
+              <div class="field">
+                <label>Current Password</label>
+                <div class="input-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                  <input type="password" id="profile-cur-pw" placeholder="Enter current password" />
+                  <button class="pw-toggle" onclick="togglePw('profile-cur-pw',this)" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label>New Password</label>
+                <div class="input-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                  <input type="password" id="profile-new-pw" placeholder="Enter new password" />
+                  <button class="pw-toggle" onclick="togglePw('profile-new-pw',this)" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Confirm New Password</label>
+                <div class="input-wrap">
+                  <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                  <input type="password" id="profile-conf-pw" placeholder="Repeat new password" />
+                  <button class="pw-toggle" onclick="togglePw('profile-conf-pw',this)" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <button class="btn btn-primary" style="width:auto;padding:11px 24px" onclick="saveProfilePassword()">
+                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                Update Password
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── ACCOUNTS (USER MANAGEMENT) ── -->
+      <div id="view-accounts" class="content-area" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1>Accounts</h1>
+            <p>Manage staff accounts — add, edit, activate, and deactivate access.</p>
+          </div>
+          <button class="btn btn-green" onclick="openAddAccountModal()">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Add Account
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Staff Accounts</h3>
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <input type="text" id="accounts-search" placeholder="Search by name, username, email…" oninput="loadAccounts(this.value)" />
+            </div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="table-wrap">
+              <table id="tbl-accounts">
+                <thead>
+                  <tr>
+                    <th>ID</th><th>Full Name</th><th>Username</th><th>Role</th><th>Email</th><th>Status</th><th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="accounts-tbody">
+                  <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">Loading accounts…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+  </div><!-- /app-shell -->
+</div><!-- /page-app -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODALS
+═══════════════════════════════════════════════════════════════ -->
+
+<!-- ADD BOOK -->
+<div class="modal-overlay" id="modal-add-book" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add New Book</h3>
+      <button class="modal-close" onclick="closeModal('modal-add-book')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div id="add-book-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="add-book-alert-msg"></span>
+      </div>
+      <div class="field"><label>ISBN</label>
+        <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        <input type="text" id="add-book-isbn" placeholder="e.g. 9780134685991" /></div></div>
+      <div class="field"><label>Book Title</label>
+        <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <input type="text" id="add-book-title" placeholder="Enter book title" /></div></div>
+      <div class="form-row">
+        <div class="field"><label>Publisher</label>
+          <div class="input-wrap no-icon"><input type="text" id="add-book-publisher" placeholder="e.g. O'Reilly Media" /></div></div>
+        <div class="field"><label>Publication Year</label>
+          <div class="input-wrap no-icon"><input type="number" id="add-book-year" placeholder="e.g. 2023" min="1900" max="2099" /></div></div>
+      </div>
+      <div class="field"><label>Author(s) <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12z"/></svg>
+          <select id="add-book-author">
+            <option value="">Select author</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-book')">Cancel</button>
+      <button class="btn btn-green" onclick="doAddBook()">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Add Book
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD BORROW RECORD -->
+<div class="modal-overlay" id="modal-add-borrow" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add Borrow Record</h3>
+      <button class="modal-close" onclick="closeModal('modal-add-borrow')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div id="add-borrow-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="add-borrow-alert-msg"></span>
+      </div>
+      <div class="field"><label>Student</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12z"/></svg>
+          <select id="add-borrow-student">
+            <option value="">Select student</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Book</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          <select id="add-borrow-book">
+            <option value="">Select book</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Borrow Date</label>
+          <div class="input-wrap no-icon"><input type="date" id="borrow-date" /></div></div>
+        <div class="field"><label>Return Date <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <div class="input-wrap no-icon"><input type="date" id="return-date" /></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-borrow')">Cancel</button>
+      <button class="btn btn-green" onclick="doAddBorrow()">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Save Record
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STUDENT -->
+<div class="modal-overlay" id="modal-add-student" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add New Student</h3>
+      <button class="modal-close" onclick="closeModal('modal-add-student')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div id="add-student-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="add-student-alert-msg"></span>
+      </div>
+      <div class="field"><label>Student Number</label>
+        <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        <input type="number" id="add-student-no" placeholder="e.g. 20240011" /></div></div>
+      <div class="form-row">
+        <div class="field"><label>First Name</label>
+          <div class="input-wrap no-icon"><input type="text" id="add-student-fn" placeholder="First name" /></div></div>
+        <div class="field"><label>Last Name</label>
+          <div class="input-wrap no-icon"><input type="text" id="add-student-ln" placeholder="Last name" /></div></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Year Level</label>
+          <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4z"/></svg>
+          <select id="add-student-year"><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option></select></div></div>
+        <div class="field"><label>Course</label>
+          <div class="input-wrap no-icon">
+            <select id="add-student-course">
+              <option>BS Information Technology</option>
+              <option>BS Computer Science</option>
+              <option>BS Nursing</option>
+              <option>BS Business Administration</option>
+              <option>BS Secondary Education</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-student')">Cancel</button>
+      <button class="btn btn-green" onclick="doAddStudent()">
+        <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Register Student
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW BOOK DETAIL -->
+<div class="modal-overlay" id="modal-view-book" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Book Details</h3>
+      <button class="modal-close" onclick="closeModal('modal-view-book')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body" id="modal-view-book-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-view-book')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT ACCOUNT -->
+<div class="modal-overlay" id="modal-edit-account" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Account</h3>
+      <button class="modal-close" onclick="closeModal('modal-edit-account')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ea-id" />
+      <div id="edit-account-alert" class="alert alert-red" style="display:none">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="edit-account-alert-msg"></span>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>First Name</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            <input type="text" id="ea-fn" placeholder="First name" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <div class="input-wrap no-icon">
+            <input type="text" id="ea-ln" placeholder="Last name" />
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Username</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+          <input type="text" id="ea-user" placeholder="Username" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Email <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <input type="email" id="ea-email" placeholder="e.g. staff@school.edu" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-account')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEditAccount()">
+        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ACCOUNT (admin only, inside app) -->
+<div class="modal-overlay" id="modal-add-account-main" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add New Account</h3>
+      <button class="modal-close" onclick="closeModal('modal-add-account-main')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div id="add-account-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="add-account-alert-msg"></span>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>First Name</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            <input type="text" id="na-fn" placeholder="e.g. Maria" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <div class="input-wrap no-icon">
+            <input type="text" id="na-ln" placeholder="e.g. Santos" />
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Username</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+            <input type="text" id="na-user" placeholder="Choose a username" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <select id="na-role">
+              <option value="staff">Staff</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Email <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <input type="email" id="na-email" placeholder="e.g. staff@school.edu" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          <input type="password" id="na-pass" placeholder="Min. 6 characters" />
+          <button class="pw-toggle" onclick="togglePw('na-pass',this)" type="button">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <div class="input-wrap">
+          <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          <input type="password" id="na-pass2" placeholder="Repeat password" />
+          <button class="pw-toggle" onclick="togglePw('na-pass2',this)" type="button">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-account-main')">Cancel</button>
+      <button class="btn btn-green" onclick="doAddAccount()">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Create Account
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT BOOK -->
+<div class="modal-overlay" id="modal-edit-book" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Book</h3>
+      <button class="modal-close" onclick="closeModal('modal-edit-book')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="eb-id" />
+      <div id="edit-book-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="edit-book-alert-msg"></span>
+      </div>
+      <div class="field"><label>ISBN</label>
+        <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        <input type="text" id="eb-isbn" placeholder="e.g. 9780134685991" /></div></div>
+      <div class="field"><label>Book Title</label>
+        <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <input type="text" id="eb-title" placeholder="Enter book title" /></div></div>
+      <div class="form-row">
+        <div class="field"><label>Publisher</label>
+          <div class="input-wrap no-icon"><input type="text" id="eb-publisher" placeholder="Publisher" /></div></div>
+        <div class="field"><label>Publication Year</label>
+          <div class="input-wrap no-icon"><input type="number" id="eb-year" placeholder="e.g. 2023" min="1900" max="2099" /></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-book')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEditBook()">
+        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT STUDENT -->
+<div class="modal-overlay" id="modal-edit-student" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Student</h3>
+      <button class="modal-close" onclick="closeModal('modal-edit-student')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="es-id" />
+      <div id="edit-student-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="edit-student-alert-msg"></span>
+      </div>
+      <div class="field"><label>Student Number</label>
+        <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        <input type="number" id="es-no" placeholder="e.g. 20240011" /></div></div>
+      <div class="form-row">
+        <div class="field"><label>First Name</label>
+          <div class="input-wrap no-icon"><input type="text" id="es-fn" placeholder="First name" /></div></div>
+        <div class="field"><label>Last Name</label>
+          <div class="input-wrap no-icon"><input type="text" id="es-ln" placeholder="Last name" /></div></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Year Level</label>
+          <div class="input-wrap"><svg class="field-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4z"/></svg>
+          <select id="es-year"><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option></select></div></div>
+        <div class="field"><label>Course</label>
+          <div class="input-wrap no-icon">
+            <select id="es-course">
+              <option>BS Information Technology</option>
+              <option>BS Computer Science</option>
+              <option>BS Nursing</option>
+              <option>BS Business Administration</option>
+              <option>BS Secondary Education</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-student')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEditStudent()">
+        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT BORROW -->
+<div class="modal-overlay" id="modal-edit-borrow" onclick="overlayClose(event,this)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Edit Borrow Record</h3>
+      <button class="modal-close" onclick="closeModal('modal-edit-borrow')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ebr-id" />
+      <div id="edit-borrow-alert" style="display:none" class="alert alert-red">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="edit-borrow-alert-msg"></span>
+      </div>
+      <div class="field"><label>Student</label>
+        <div class="input-wrap no-icon"><input type="text" id="ebr-student" readonly style="background:var(--cream2);color:var(--muted)" /></div></div>
+      <div class="field"><label>Book Title</label>
+        <div class="input-wrap no-icon"><input type="text" id="ebr-title" readonly style="background:var(--cream2);color:var(--muted)" /></div></div>
+      <div class="form-row">
+        <div class="field"><label>Borrow Date</label>
+          <div class="input-wrap no-icon"><input type="date" id="ebr-borrow-date" readonly style="background:var(--cream2);color:var(--muted)" /></div></div>
+        <div class="field"><label>Return Date</label>
+          <div class="input-wrap no-icon"><input type="date" id="ebr-return-date" /></div></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px">Leave return date empty to mark as unreturned.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-borrow')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEditBorrow()">
+        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── STATE ─────────────────────────────────────────────────── */
+let currentUser = null;
+let _authorsCache = [];   // cached author list for dropdowns
+let _studentsCache = [];  // cached students for borrow dropdown
+let _booksCache = [];     // cached books for borrow dropdown
+
+/* ─── SHARED API HELPER ─────────────────────────────────────── */
+async function api(action, data = {}) {
+  const res = await fetch('api.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, ...data })
+  });
+  return await res.json();
+}
+
+/* ─── LOGIN ─────────────────────────────────────────────────── */
+async function doLogin() {
+  const user     = document.getElementById('login-user').value.trim();
+  const pass     = document.getElementById('login-pass').value;
+  const alertEl  = document.getElementById('login-alert');
+  const alertMsg = document.getElementById('login-alert-msg');
+  alertEl.style.display = 'none';
+
+  try {
+    const result = await api('login', { username: user, password: pass });
+    if (result.status === 'success') {
+      currentUser = result.user;
+      if (document.getElementById('login-remember').checked) {
+        localStorage.setItem('lms_user', JSON.stringify(currentUser));
+      }
+      loadApp(result.user);
+    } else {
+      alertEl.style.display = 'flex';
+      alertMsg.textContent  = result.message || 'Invalid username or password.';
+    }
+  } catch (err) {
+    alertEl.style.display = 'flex';
+    alertMsg.textContent  = 'Could not reach the server. Please try again.';
+  }
+}
+
+/* ─── SIGN UP ─────────────────────────────────────────────────── */
+async function doSignup() {
+  const fn       = document.getElementById('su-fn').value.trim();
+  const ln       = document.getElementById('su-ln').value.trim();
+  const username = document.getElementById('su-user').value.trim();
+  const pass     = document.getElementById('su-pass').value;
+  const pass2    = document.getElementById('su-pass2').value;
+  const alertEl  = document.getElementById('signup-alert');
+  const alertMsg = document.getElementById('signup-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!fn || !ln || !username || !pass || !pass2) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Please complete all fields.'; return;
+  }
+  if (pass !== pass2) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Passwords do not match.'; return;
+  }
+  if (pass.length < 6) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Password must be at least 6 characters.'; return;
+  }
+
+  try {
+    const result = await api('add_account', { first_name: fn, last_name: ln, username, password: pass });
+    if (result.status === 'success') {
+      showToast('Account created successfully!', 'green');
+      ['su-fn','su-ln','su-user','su-pass','su-pass2'].forEach(id => document.getElementById(id).value = '');
+      setTimeout(() => showPage('page-login'), 1200);
+    } else {
+      alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Registration failed.';
+    }
+  } catch (err) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Could not connect to the server.';
+  }
+}
+
+/* ─── PASSWORD RECOVERY ─────────────────────────────────────── */
+async function doRecover() {
+  const u       = document.getElementById('rec-user').value.trim();
+  const alertEl = document.getElementById('recover-step1-alert');
+  const alertMsg= document.getElementById('recover-step1-msg');
+  alertEl.style.display = 'none';
+  if (!u) { alertEl.style.display = 'flex'; alertMsg.textContent = 'Please enter your username.'; return; }
+
+  try {
+    const result = await api('recover_check', { username: u });
+    if (result.status === 'success') {
+      window._recoverToken = result.recover_token;
+      document.getElementById('rec-name').textContent = result.name || u;
+      document.getElementById('recover-step1').style.display = 'none';
+      document.getElementById('recover-step2').style.display = 'block';
+    } else {
+      alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'No account found.';
+    }
+  } catch (err) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Could not reach the server.';
+  }
+}
+
+async function doResetPassword() {
+  const np      = document.getElementById('rec-newpass').value;
+  const cp      = document.getElementById('rec-confpass').value;
+  const alertEl = document.getElementById('recover-step2-alert');
+  const alertMsg= document.getElementById('recover-step2-msg');
+  alertEl.style.display = 'none';
+
+  if (!np || !cp) { alertEl.style.display = 'flex'; alertMsg.textContent = 'Please fill both password fields.'; return; }
+  if (np !== cp)  { alertEl.style.display = 'flex'; alertMsg.textContent = 'Passwords do not match.'; return; }
+  if (np.length < 6) { alertEl.style.display = 'flex'; alertMsg.textContent = 'Password must be at least 6 characters.'; return; }
+
+  try {
+    const result = await api('reset_password', { recover_token: window._recoverToken || '', new_password: np, conf_password: cp });
+    if (result.status === 'success') {
+      showToast('Password reset successfully!', 'green');
+      window._recoverToken = null;
+      setTimeout(() => {
+        showPage('page-login');
+        document.getElementById('recover-step1').style.display = 'block';
+        document.getElementById('recover-step2').style.display = 'none';
+        ['rec-user','rec-newpass','rec-confpass'].forEach(id => document.getElementById(id).value = '');
+      }, 1400);
+    } else {
+      alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Reset failed.';
+    }
+  } catch (err) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Could not reach the server.';
+  }
+}
+
+/* ─── APP BOOTSTRAP ──────────────────────────────────────────── */
+function loadApp(user) {
+  currentUser = user;
+  document.getElementById('staff-name').textContent           = user.fn + ' ' + user.ln;
+  document.getElementById('staff-avatar-text').textContent    = user.fn[0].toUpperCase();
+  document.getElementById('staff-role-label').textContent     = user.role === 'admin' ? 'Admin' : 'Staff';
+  document.getElementById('profile-big-avatar').textContent   = user.fn[0].toUpperCase();
+  document.getElementById('profile-banner-name').textContent  = user.fn + ' ' + user.ln;
+  document.getElementById('profile-banner-user').textContent  = '@' + user.username + ' · ' + (user.role === 'admin' ? 'Admin' : 'Staff');
+  document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  // Hide Accounts nav item for non-admins
+  const navAccounts = document.getElementById('nav-accounts');
+  if (navAccounts) navAccounts.style.display = user.role === 'admin' ? '' : 'none';
+
+  showPage('page-app');
+
+  // Always reset to the Dashboard view on login so a non-admin user
+  // never inherits a restricted tab (e.g. Accounts) from a previous session.
+  document.querySelectorAll('.main-content [id^="view-"]').forEach(v => v.style.display = 'none');
+  document.getElementById('view-dashboard').style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const dashNav = document.querySelector('.nav-item[onclick*="\'dashboard\'"]');
+  if (dashNav) dashNav.classList.add('active');
+
+  // Load all data
+  loadDashboardStats();
+  loadBooks();
+  loadAuthors();
+  loadStudents();
+  loadBorrows();
+  if (user.role === 'admin') loadAccounts();
+}
+
+async function doLogout() {
+  if (!confirm('Are you sure you want to sign out?')) return;
+  try { await api('logout'); } catch(e) {}
+  localStorage.removeItem('lms_user');
+  currentUser = null;
+  showPage('page-login');
+}
+
+/* ─── DASHBOARD ──────────────────────────────────────────────── */
+async function loadDashboardStats() {
+  const result = await api('get_dashboard_stats');
+  if (result.status !== 'success') return;
+
+  const s = result.stats;
+  // stat-value cards (by position)
+  const vals = document.querySelectorAll('.stat-value');
+  if (vals[0]) vals[0].textContent = s.book;
+  if (vals[1]) vals[1].textContent = s.student;
+  if (vals[2]) vals[2].textContent = s.borrow;
+  if (vals[3]) vals[3].textContent = s.overdue;
+
+  // Currently borrowed widget
+  const cbList = document.querySelector('#view-dashboard .dash-grid .card:first-child .recent-list');
+  if (cbList && result.currently_borrowed) {
+    const count = result.currently_borrowed.length;
+    const badge = cbList.closest('.card').querySelector('.badge');
+    if (badge) badge.textContent = count + ' Active';
+
+    if (count === 0) {
+      cbList.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted)">No books currently borrowed.</div>';
+    } else {
+      cbList.innerHTML = result.currently_borrowed.map(b => `
+        <div class="recent-item">
+          <div class="recent-avatar"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg></div>
+          <div>
+            <div class="recent-title">${esc(b.Title)}</div>
+            <div class="recent-sub">${esc(b.StudentName)} · Since ${formatDate(b.BorrowDate)}</div>
+          </div>
+          <span class="badge badge-red recent-badge">Unreturned</span>
+        </div>`).join('');
+    }
+  }
+
+  // Most popular widget
+  const popList = document.querySelector('#view-dashboard .dash-grid .card:last-child .recent-list');
+  if (popList && result.popular_books) {
+    const ranks = ['#1','#2','#3','#4','#5'];
+    const goldColors = ['var(--brown)','var(--muted)','var(--muted)','var(--muted)','var(--muted)'];
+    const badgeClasses = ['badge-gold','badge-muted','badge-muted','badge-muted','badge-muted'];
+
+    if (result.popular_books.length === 0) {
+      popList.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted)">No borrow records yet.</div>';
+    } else {
+      popList.innerHTML = result.popular_books.map((b, i) => `
+        <div class="recent-item">
+          <div style="font-size:20px;font-weight:800;color:${goldColors[i]};width:28px;text-align:center;flex-shrink:0">${ranks[i]}</div>
+          <div>
+            <div class="recent-title">${esc(b.Title)}</div>
+            <div class="recent-sub">${esc(b.Authors || '—')} · ${esc(b.Publisher)}</div>
+          </div>
+          <span class="badge ${badgeClasses[i]} recent-badge">${b.TimesBorrowed} borrow${b.TimesBorrowed != 1 ? 's' : ''}</span>
+        </div>`).join('');
+    }
+  }
+}
+
+/* ─── BOOKS ──────────────────────────────────────────────────── */
+async function loadBooks() {
+  const result = await api('get_book');
+  if (result.status !== 'success') return;
+  _booksCache = result.book;
+
+  const tbody = document.querySelector('#tbl-books tbody');
+  if (!result.book.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">No books found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = result.book.map(b => `
+    <tr>
+      <td>${b.BookID}</td>
+      <td>${esc(b.ISBN)}</td>
+      <td><strong>${esc(b.Title)}</strong></td>
+      <td>${esc(b.Publisher)}</td>
+      <td>${b.PublicationYear}</td>
+      <td>${esc(b.Authors || '—')}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-secondary btn-sm" onclick="openEditBook(${b.BookID},${JSON.stringify(b).replace(/"/g,'&quot;')})">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;margin-right:3px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Edit
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+async function loadAuthors() {
+  const result = await api('get_authors');
+  if (result.status !== 'success') return;
+  _authorsCache = result.authors;
+
+  // Populate authors table
+  const table = document.querySelector('#tab-books-authors table tbody');
+  if (table) {
+    table.innerHTML = result.authors.map(a => `
+      <tr>
+        <td>${a.AuthorID}</td>
+        <td>${esc(a.Author_FN)}</td>
+        <td>${esc(a.Author_LN)}</td>
+        <td>${esc(a.Books || '—')}</td>
+      </tr>`).join('');
+  }
+
+  // Populate Add Book author dropdown
+  const sel = document.getElementById('add-book-author');
+  if (sel) {
+    sel.innerHTML = '<option value="">Select author (optional)</option>' +
+      result.authors.map(a => `<option value="${a.AuthorID}">${esc(a.Author_FN)} ${esc(a.Author_LN)}</option>`).join('');
+  }
+}
+
+function openEditBook(id, book) {
+  document.getElementById('eb-id').value        = id;
+  document.getElementById('eb-isbn').value      = book.ISBN;
+  document.getElementById('eb-title').value     = book.Title;
+  document.getElementById('eb-publisher').value = book.Publisher;
+  document.getElementById('eb-year').value      = book.PublicationYear;
+  document.getElementById('edit-book-alert').style.display = 'none';
+  openModal('modal-edit-book');
+}
+
+async function submitEditBook() {
+  const id        = document.getElementById('eb-id').value;
+  const isbn      = document.getElementById('eb-isbn').value.trim();
+  const title     = document.getElementById('eb-title').value.trim();
+  const publisher = document.getElementById('eb-publisher').value.trim();
+  const year      = document.getElementById('eb-year').value.trim();
+  const alertEl   = document.getElementById('edit-book-alert');
+  const alertMsg  = document.getElementById('edit-book-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!isbn || !title || !publisher || !year) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'All fields are required.'; return;
+  }
+
+  const result = await api('update_book', { book_id: parseInt(id), isbn, title, publisher, year: parseInt(year) });
+  if (result.status === 'success') {
+    closeModal('modal-edit-book');
+    showToast('Book updated successfully!', 'green');
+    loadBooks();
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Update failed.';
+  }
+}
+
+async function doAddBook() {
+  const isbn      = document.getElementById('add-book-isbn').value.trim();
+  const title     = document.getElementById('add-book-title').value.trim();
+  const publisher = document.getElementById('add-book-publisher').value.trim();
+  const year      = document.getElementById('add-book-year').value.trim();
+  const authorId  = document.getElementById('add-book-author').value;
+  const alertEl   = document.getElementById('add-book-alert');
+  const alertMsg  = document.getElementById('add-book-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!isbn || !title || !publisher || !year) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'ISBN, title, publisher, and year are required.'; return;
+  }
+
+  const result = await api('add_book', { isbn, title, publisher, year: parseInt(year), author_id: authorId ? parseInt(authorId) : null });
+  if (result.status === 'success') {
+    closeModal('modal-add-book');
+    showToast('Book added successfully!', 'green');
+    ['add-book-isbn','add-book-title','add-book-publisher','add-book-year'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('add-book-author').value = '';
+    loadBooks();
+    loadAuthors();
+    loadDashboardStats();
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Failed to add book.';
+  }
+}
+
+/* ─── STUDENTS ───────────────────────────────────────────────── */
+async function loadStudents() {
+  const result = await api('get_student');
+  if (result.status !== 'success') return;
+  _studentsCache = result.student;
+
+  const tbody = document.querySelector('#tbl-students tbody');
+  if (!result.student.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">No students found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = result.student.map(s => `
+    <tr>
+      <td>${s.StudentID}</td>
+      <td>${s.StudentNumber}</td>
+      <td><strong>${esc(s.Student_FN)} ${esc(s.Student_LN)}</strong></td>
+      <td>Year ${s.YearLevel}</td>
+      <td>${esc(s.Course)}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-secondary btn-sm" onclick="openEditStudent(${s.StudentID},${JSON.stringify(s).replace(/"/g,'&quot;')})">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;margin-right:3px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Edit
+        </button>
+      </td>
+    </tr>`).join('');
+
+  // Also refresh borrow modal student dropdown
+  const sel = document.getElementById('add-borrow-student');
+  if (sel) {
+    sel.innerHTML = '<option value="">Select student</option>' +
+      result.student.map(s => `<option value="${s.StudentID}">${s.StudentNumber} — ${esc(s.Student_FN)} ${esc(s.Student_LN)}</option>`).join('');
+  }
+}
+
+function openEditStudent(id, st) {
+  document.getElementById('es-id').value = id;
+  document.getElementById('es-no').value = st.StudentNumber;
+  document.getElementById('es-fn').value = st.Student_FN;
+  document.getElementById('es-ln').value = st.Student_LN;
+  document.getElementById('es-year').value   = st.YearLevel;
+  document.getElementById('es-course').value = st.Course;
+  document.getElementById('edit-student-alert').style.display = 'none';
+  openModal('modal-edit-student');
+}
+
+async function submitEditStudent() {
+  const id      = document.getElementById('es-id').value;
+  const no      = document.getElementById('es-no').value.trim();
+  const fn      = document.getElementById('es-fn').value.trim();
+  const ln      = document.getElementById('es-ln').value.trim();
+  const year    = document.getElementById('es-year').value;
+  const course  = document.getElementById('es-course').value;
+  const alertEl = document.getElementById('edit-student-alert');
+  const alertMsg= document.getElementById('edit-student-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!no || !fn || !ln) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'All fields are required.'; return;
+  }
+
+  const result = await api('update_student', { student_id: parseInt(id), student_no: parseInt(no), first_name: fn, last_name: ln, year_level: parseInt(year), course });
+  if (result.status === 'success') {
+    closeModal('modal-edit-student');
+    showToast('Student updated successfully!', 'green');
+    loadStudents();
+    loadDashboardStats();
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Update failed.';
+  }
+}
+
+async function doAddStudent() {
+  const no      = document.getElementById('add-student-no').value.trim();
+  const fn      = document.getElementById('add-student-fn').value.trim();
+  const ln      = document.getElementById('add-student-ln').value.trim();
+  const year    = document.getElementById('add-student-year').value;
+  const course  = document.getElementById('add-student-course').value;
+  const alertEl = document.getElementById('add-student-alert');
+  const alertMsg= document.getElementById('add-student-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!no || !fn || !ln) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Student number, first name, and last name are required.'; return;
+  }
+
+  const result = await api('add_student', { student_no: parseInt(no), first_name: fn, last_name: ln, year_level: parseInt(year), course });
+  if (result.status === 'success') {
+    closeModal('modal-add-student');
+    showToast('Student registered successfully!', 'green');
+    ['add-student-no','add-student-fn','add-student-ln'].forEach(id => document.getElementById(id).value = '');
+    loadStudents();
+    loadDashboardStats();
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Failed to add student.';
+  }
+}
+
+/* ─── BORROWS ────────────────────────────────────────────────── */
+async function loadBorrows() {
+  const result = await api('get_borrows');
+  if (result.status !== 'success') return;
+
+  const all      = result.borrows;
+  const active   = all.filter(b => !b.ReturnDate);
+  const returned = all.filter(b => b.ReturnDate);
+
+  /* ── All Records tab ── */
+  const tbody = document.querySelector('#tbl-borrows tbody');
+  if (!all.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">No borrow records found.</td></tr>';
+  } else {
+    tbody.innerHTML = all.map(br => {
+      const isReturned = !!br.ReturnDate;
+      return `<tr>
+        <td>${br.BorrowID}</td>
+        <td>${esc(br.StudentName)}</td>
+        <td><strong>${esc(br.Title)}</strong></td>
+        <td>${formatDate(br.BorrowDate)}</td>
+        <td>${br.ReturnDate ? formatDate(br.ReturnDate) : '—'}</td>
+        <td>${isReturned ? '<span class="badge badge-green">Returned</span>' : '<span class="badge badge-red">Unreturned</span>'}</td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-secondary btn-sm" onclick="openEditBorrow(${br.BorrowID},${JSON.stringify(br).replace(/"/g,'&quot;')})">
+            <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;margin-right:3px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Edit
+          </button>
+          ${!isReturned ? `<button class="btn btn-green btn-sm" onclick="markReturned(${br.BorrowID})">Return</button>` : ''}
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ── Currently Borrowed tab ── */
+  const activeBadge = document.querySelector('#tab-borrow-active .card-header .badge');
+  if (activeBadge) activeBadge.textContent = active.length + ' Unreturned';
+
+  const activeTbody = document.querySelector('#tab-borrow-active table tbody');
+  if (activeTbody) {
+    activeTbody.innerHTML = active.length ? active.map(br => `
+      <tr>
+        <td>${br.BorrowID}</td>
+        <td>${br.StudentNumber}</td>
+        <td>${esc(br.StudentName)}</td>
+        <td><strong>${esc(br.Title)}</strong></td>
+        <td>${formatDate(br.BorrowDate)}</td>
+        <td>
+          <button class="btn btn-green btn-sm" onclick="markReturned(${br.BorrowID})">Mark Returned</button>
+        </td>
+      </tr>`).join('') :
+      '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">No unreturned books.</td></tr>';
+  }
+
+  /* ── Borrow History tab ── */
+  const histTbody = document.querySelector('#tab-borrow-history table tbody');
+  if (histTbody) {
+    histTbody.innerHTML = all.length ? all.map(br => `
+      <tr>
+        <td>${br.StudentNumber}</td>
+        <td>${esc(br.StudentName)}</td>
+        <td><strong>${esc(br.Title)}</strong></td>
+        <td>${formatDate(br.BorrowDate)}</td>
+        <td>${br.ReturnDate ? formatDate(br.ReturnDate) : '<span style="color:var(--red)">Unreturned</span>'}</td>
+      </tr>`).join('') :
+      '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted)">No borrow history.</td></tr>';
+  }
+
+  // Refresh book dropdown for Add Borrow modal
+  const bookSel = document.getElementById('add-borrow-book');
+  if (bookSel && _booksCache.length) {
+    bookSel.innerHTML = '<option value="">Select book</option>' +
+      _booksCache.map(b => `<option value="${b.BookID}">${esc(b.Title)}</option>`).join('');
+  }
+}
+
+async function markReturned(id) {
+  if (!confirm('Mark this book as returned today?')) return;
+  const result = await api('mark_returned', { borrow_id: id });
+  if (result.status === 'success') {
+    showToast('Book marked as returned!', 'green');
+    loadBorrows(); loadDashboardStats();
+  } else {
+    showToast(result.message || 'Failed to mark returned.', 'red');
+  }
+}
+
+function openEditBorrow(id, br) {
+  document.getElementById('ebr-id').value          = id;
+  document.getElementById('ebr-student').value     = `${br.StudentNumber} — ${br.StudentName}`;
+  document.getElementById('ebr-title').value       = br.Title;
+  document.getElementById('ebr-borrow-date').value = br.BorrowDate;
+  document.getElementById('ebr-return-date').value = br.ReturnDate || '';
+  document.getElementById('edit-borrow-alert').style.display = 'none';
+  openModal('modal-edit-borrow');
+}
+
+async function submitEditBorrow() {
+  const id          = document.getElementById('ebr-id').value;
+  const returnDate  = document.getElementById('ebr-return-date').value || null;
+  const alertEl     = document.getElementById('edit-borrow-alert');
+  const alertMsg    = document.getElementById('edit-borrow-alert-msg');
+  alertEl.style.display = 'none';
+
+  const result = await api('update_borrow', { borrow_id: parseInt(id), return_date: returnDate });
+  if (result.status === 'success') {
+    closeModal('modal-edit-borrow');
+    showToast('Borrow record updated!', 'green');
+    loadBorrows(); loadDashboardStats();
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Update failed.';
+  }
+}
+
+async function doAddBorrow() {
+  const studentId  = document.getElementById('add-borrow-student').value;
+  const bookId     = document.getElementById('add-borrow-book').value;
+  const borrowDate = document.getElementById('borrow-date').value;
+  const returnDate = document.getElementById('return-date').value || null;
+  const alertEl    = document.getElementById('add-borrow-alert');
+  const alertMsg   = document.getElementById('add-borrow-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!studentId || !bookId || !borrowDate) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Please select a student, book, and borrow date.'; return;
+  }
+
+  const result = await api('add_borrow', { student_id: parseInt(studentId), book_id: parseInt(bookId), borrow_date: borrowDate, return_date: returnDate });
+  if (result.status === 'success') {
+    closeModal('modal-add-borrow');
+    showToast('Borrow record added successfully!', 'green');
+    document.getElementById('return-date').value = '';
+    loadBorrows(); loadDashboardStats();
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Failed to add record.';
+  }
+}
+
+/* ─── ACCOUNTS ───────────────────────────────────────────────── */
+function openAddAccountModal() {
+  ['na-fn','na-ln','na-user','na-email','na-pass','na-pass2'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('na-role').value = 'staff';
+  document.getElementById('add-account-alert').style.display = 'none';
+  openModal('modal-add-account-main');
+}
+
+async function doAddAccount() {
+  const fn      = document.getElementById('na-fn').value.trim();
+  const ln      = document.getElementById('na-ln').value.trim();
+  const user    = document.getElementById('na-user').value.trim();
+  const role    = document.getElementById('na-role').value;
+  const email   = document.getElementById('na-email').value.trim();
+  const pass    = document.getElementById('na-pass').value;
+  const pass2   = document.getElementById('na-pass2').value;
+  const alertEl = document.getElementById('add-account-alert');
+  const alertMsg= document.getElementById('add-account-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!fn || !ln || !user || !pass) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'First name, last name, username, and password are required.'; return;
+  }
+  if (pass !== pass2) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Passwords do not match.'; return;
+  }
+  if (pass.length < 6) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'Password must be at least 6 characters.'; return;
+  }
+
+  const result = await api('add_account', { first_name: fn, last_name: ln, username: user, role, email: email || '', password: pass });
+  if (result.status === 'success') {
+    closeModal('modal-add-account-main');
+    showToast('Account created successfully!', 'green');
+    loadAccounts(document.getElementById('accounts-search')?.value || '');
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Failed to create account.';
+  }
+}
+
+async function loadAccounts(search = '') {
+  const tbody = document.getElementById('accounts-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">Loading…</td></tr>';
+  try {
+    const result = await api('get_accounts', { search: search || '' });
+    if (result.status === 'success') {
+      renderAccounts(result.accounts);
+    } else {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--red)">${result.message || 'Failed to load accounts.'}</td></tr>`;
+    }
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--red)">Could not reach the server.</td></tr>';
+  }
+}
+
+function renderAccounts(accounts) {
+  const tbody = document.getElementById('accounts-tbody');
+  if (!accounts || accounts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">No accounts found.</td></tr>';
+    return;
+  }
+  const isAdmin = currentUser?.role === 'admin';
+  tbody.innerHTML = accounts.map(a => {
+    const isActive  = a.Status === 'active';
+    const isSelf    = currentUser && parseInt(a.UserID) === parseInt(currentUser.id);
+    const roleBadge = a.Role === 'admin'
+      ? '<span class="badge badge-gold">Admin</span>'
+      : '<span class="badge badge-muted">Staff</span>';
+    const statusBadge = isActive
+      ? '<span class="badge badge-green">● Active</span>'
+      : '<span class="badge badge-red">● Inactive</span>';
+
+    let toggleBtn = '';
+    if (isAdmin) {
+      if (isSelf) {
+        toggleBtn = `<button class="btn btn-secondary btn-sm" disabled title="Cannot change your own status">Status</button>`;
+      } else if (isActive) {
+        toggleBtn = `<button class="btn btn-red btn-sm" onclick="toggleAccountStatus(${a.UserID},'inactive')">Deactivate</button>`;
+      } else {
+        toggleBtn = `<button class="btn btn-green btn-sm" onclick="toggleAccountStatus(${a.UserID},'active')">Activate</button>`;
+      }
+    }
+
+    return `<tr>
+      <td>${a.UserID}</td>
+      <td><strong>${esc(a.FirstName)} ${esc(a.LastName)}</strong>${isSelf ? ' <span class="badge badge-gold" style="font-size:10px">You</span>' : ''}</td>
+      <td>@${esc(a.Username)}</td>
+      <td>${roleBadge}</td>
+      <td>${a.Email ? esc(a.Email) : '<span style="color:var(--muted)">—</span>'}</td>
+      <td>${statusBadge}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-secondary btn-sm" onclick="openEditAccount(${a.UserID})">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;margin-right:3px"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Edit
+        </button>
+        ${toggleBtn}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function openEditAccount(id) {
+  document.getElementById('edit-account-alert').style.display = 'none';
+  try {
+    const result = await api('get_account', { user_id: id });
+    if (result.status === 'success') {
+      const a = result.account;
+      document.getElementById('ea-id').value    = a.UserID;
+      document.getElementById('ea-fn').value    = a.FirstName;
+      document.getElementById('ea-ln').value    = a.LastName;
+      document.getElementById('ea-user').value  = a.Username;
+      document.getElementById('ea-email').value = a.Email || '';
+      openModal('modal-edit-account');
+    } else {
+      showToast(result.message || 'Account not found.', 'red');
+    }
+  } catch (err) {
+    showToast('Could not reach the server.', 'red');
+  }
+}
+
+async function submitEditAccount() {
+  const id      = document.getElementById('ea-id').value;
+  const fn      = document.getElementById('ea-fn').value.trim();
+  const ln      = document.getElementById('ea-ln').value.trim();
+  const u       = document.getElementById('ea-user').value.trim();
+  const email   = document.getElementById('ea-email').value.trim();
+  const alertEl = document.getElementById('edit-account-alert');
+  const alertMsg= document.getElementById('edit-account-alert-msg');
+  alertEl.style.display = 'none';
+
+  if (!fn || !ln || !u) {
+    alertEl.style.display = 'flex'; alertMsg.textContent = 'First name, last name, and username are required.'; return;
+  }
+
+  const result = await api('update_profile', { user_id: parseInt(id), first_name: fn, last_name: ln, username: u, email: email || '' });
+  if (result.status === 'success') {
+    closeModal('modal-edit-account');
+    showToast('Account updated successfully!', 'green');
+    if (currentUser && parseInt(id) === parseInt(currentUser.id)) {
+      currentUser.fn = fn; currentUser.ln = ln; currentUser.username = u; currentUser.email = email;
+      document.getElementById('staff-name').textContent        = fn + ' ' + ln;
+      document.getElementById('staff-avatar-text').textContent = fn[0].toUpperCase();
+      document.getElementById('staff-role-label').textContent  = currentUser.role === 'admin' ? 'Admin' : 'Staff';
+      if (localStorage.getItem('lms_user')) localStorage.setItem('lms_user', JSON.stringify(currentUser));
+    }
+    loadAccounts(document.getElementById('accounts-search').value);
+  } else {
+    alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Failed to update account.';
+  }
+}
+
+async function toggleAccountStatus(id, newStatus) {
+  const label = newStatus === 'active' ? 'activate' : 'deactivate';
+  if (!confirm(`Are you sure you want to ${label} this account?`)) return;
+  const result = await api('set_status', { user_id: id, status: newStatus });
+  if (result.status === 'success') {
+    showToast(`Account ${label}d successfully!`, 'green');
+
+    // Instantly update the row in the DOM — no full reload needed
+    const rows = document.querySelectorAll('#accounts-tbody tr');
+    rows.forEach(row => {
+      const firstCell = row.querySelector('td:first-child');
+      if (firstCell && parseInt(firstCell.textContent.trim()) === parseInt(id)) {
+        // Update status badge (6th column)
+        const statusCell = row.querySelector('td:nth-child(6)');
+        if (statusCell) {
+          statusCell.innerHTML = newStatus === 'active'
+            ? '<span class="badge badge-green">● Active</span>'
+            : '<span class="badge badge-red">● Inactive</span>';
+        }
+        // Update the toggle button inside the last column
+        const actionsCell = row.querySelector('td:last-child');
+        if (actionsCell) {
+          const oldBtn = actionsCell.querySelector('.btn-red, .btn-green');
+          if (oldBtn) {
+            if (newStatus === 'active') {
+              oldBtn.className = 'btn btn-red btn-sm';
+              oldBtn.textContent = 'Deactivate';
+              oldBtn.setAttribute('onclick', `toggleAccountStatus(${id},'inactive')`);
+            } else {
+              oldBtn.className = 'btn btn-green btn-sm';
+              oldBtn.textContent = 'Activate';
+              oldBtn.setAttribute('onclick', `toggleAccountStatus(${id},'active')`);
+            }
+          }
+        }
+      }
+    });
+  } else {
+    showToast(result.message || 'Failed to update status.', 'red');
+  }
+}
+
+/* ─── REPORTS ────────────────────────────────────────────────── */
+const reportConfig = {
+  borrowed: {
+    title:      'Currently Borrowed Books',
+    action:     'get_report_borrowed',
+    headers:    ['Borrow ID','Student No.','Student Name','Book Title','Borrow Date'],
+    keys:       ['BorrowID','StudentNumber','StudentName','BookTitle','BorrowDate'],
+    chartLabel: 'Borrow Date',
+    chartKey:   'BorrowDate',
+    chartCount: 'BookTitle'
+  },
+  popular: {
+    title:      'Most Popular Books',
+    action:     'get_report_popular',
+    headers:    ['Book Title','Times Borrowed'],
+    keys:       ['BookTitle','TimesBorrowed'],
+    chartLabel: 'Book Title',
+    chartKey:   'BookTitle',
+    chartCount: 'TimesBorrowed'
+  },
+  books: {
+    title:      'Book Inventory',
+    action:     'get_report_books',
+    headers:    ['Book ID','ISBN','Title','Publisher','Year','Author(s)'],
+    keys:       ['BookID','ISBN','Title','Publisher','PublicationYear','Authors'],
+    chartLabel: 'Publisher',
+    chartKey:   'Publisher',
+    chartCount: null
+  }
+};
+
+let _reportRows    = [];
+let _reportType    = '';
+let _reportGenTime = '';
+
+async function genReport(type) {
+  const cfg = reportConfig[type];
+  if (!cfg) return;
+
+  _reportType = type;
+  _reportRows = [];
+
+  const now = new Date().toLocaleString('en-US',{month:'long',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  _reportGenTime = now;
+
+  document.getElementById('report-title').textContent       = cfg.title;
+  document.getElementById('report-datagrid-title').textContent = cfg.title + ' — Data Grid';
+  document.getElementById('report-meta').textContent        = 'Generating…';
+  document.getElementById('tbl-report-body').innerHTML      = '<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--muted)">Loading report…</td></tr>';
+  document.getElementById('tbl-report-head').innerHTML      = '';
+  document.getElementById('report-output').style.display    = 'block';
+  document.getElementById('report-search').value            = '';
+  document.getElementById('report-output').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Pre-fill signature with logged-in user
+  if (currentUser) {
+    const sigBy = document.getElementById('sig-prepared-by');
+    if (!sigBy.value) sigBy.value = (currentUser.fn||'') + ' ' + (currentUser.ln||'');
+    const sigPos = document.getElementById('sig-prepared-pos');
+    if (!sigPos.value) sigPos.value = currentUser.role === 'admin' ? 'Library Administrator' : 'Library Staff';
+  }
+
+  const result = await api(cfg.action);
+  if (result.status !== 'success') {
+    document.getElementById('tbl-report-body').innerHTML = `<tr><td colspan="${cfg.headers.length}" style="text-align:center;padding:24px;color:var(--red)">${result.message || 'Failed to load report.'}</td></tr>`;
+    document.getElementById('report-meta').textContent = 'Error loading report.';
+    return;
+  }
+
+  _reportRows = result.rows || [];
+  document.getElementById('report-meta').textContent = `Generated on ${now} · ${_reportRows.length} record(s)`;
+
+  // Build table head
+  document.getElementById('tbl-report-head').innerHTML =
+    '<tr>' + cfg.headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
+
+  // Build table body
+  if (_reportRows.length === 0) {
+    document.getElementById('tbl-report-body').innerHTML =
+      `<tr><td colspan="${cfg.headers.length}" style="text-align:center;padding:24px;color:var(--muted)">No records found.</td></tr>`;
+  } else {
+    document.getElementById('tbl-report-body').innerHTML = _reportRows.map(r =>
+      `<tr>${cfg.keys.map(k => `<td>${esc(String(r[k] ?? '—'))}</td>`).join('')}</tr>`
+    ).join('');
+  }
+}
+
+/* ─── EXCEL EXPORT ───────────────────────────────────────────── */
+function exportToExcel() {
+  if (!_reportRows || _reportRows.length === 0) {
+    showToast('No data to export. Please generate a report first.', 'red');
+    return;
+  }
+  const cfg = reportConfig[_reportType];
+  if (!cfg) return;
+
+  const XLSX = window.XLSX;
+  if (!XLSX) { showToast('Excel library not loaded yet. Please wait.', 'red'); return; }
+
+  const wb = XLSX.utils.book_new();
+
+  // ── SHEET 1: Report Data ─────────────────────────────────────
+  const ws1Data = [];
+
+  // Header block — Company name + report title
+  ws1Data.push(['LIBRI — School Library Management System']);
+  ws1Data.push([cfg.title]);
+  ws1Data.push([`Generated: ${_reportGenTime}    Records: ${_reportRows.length}`]);
+  ws1Data.push([]);  // blank row
+
+  // Column headers
+  ws1Data.push(cfg.headers);
+
+  // Data rows
+  _reportRows.forEach(r => {
+    ws1Data.push(cfg.keys.map(k => r[k] ?? ''));
+  });
+
+  // Blank rows before signature block
+  ws1Data.push([]);
+  ws1Data.push([]);
+
+  // Signature block
+  const prepBy  = document.getElementById('sig-prepared-by').value  || '________________________';
+  const prepPos = document.getElementById('sig-prepared-pos').value || 'Position / Designation';
+  const appBy   = document.getElementById('sig-approved-by').value  || '________________________';
+  const appPos  = document.getElementById('sig-approved-pos').value || 'Position / Designation';
+
+  ws1Data.push(['Prepared By:', '', '', 'Approved By:']);
+  ws1Data.push(['________________________', '', '', '________________________']);
+  ws1Data.push([prepBy, '', '', appBy]);
+  ws1Data.push([prepPos, '', '', appPos]);
+
+  const ws1 = XLSX.utils.aoa_to_sheet(ws1Data);
+
+  // Column widths for Sheet 1
+  ws1['!cols'] = cfg.headers.map(() => ({ wch: 22 }));
+
+  // Merge title cells across full header width
+  const colCount = cfg.headers.length;
+  ws1['!merges'] = [
+    { s:{r:0,c:0}, e:{r:0,c:colCount-1} },  // Company name
+    { s:{r:1,c:0}, e:{r:1,c:colCount-1} },  // Report title
+    { s:{r:2,c:0}, e:{r:2,c:colCount-1} },  // Generated date
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws1, 'Report Data');
+
+  // ── SHEET 2: Chart Data ──────────────────────────────────────
+  const ws2Data = [];
+  ws2Data.push([cfg.title + ' — Chart Data']);
+  ws2Data.push([]);
+
+  if (_reportType === 'popular') {
+    // Use direct values: BookTitle vs TimesBorrowed
+    ws2Data.push(['Book Title', 'Times Borrowed']);
+    _reportRows.slice(0, 15).forEach(r => {
+      ws2Data.push([r.BookTitle || '—', Number(r.TimesBorrowed) || 0]);
+    });
+  } else if (_reportType === 'borrowed') {
+    // Count books per borrow date
+    const dateCounts = {};
+    _reportRows.forEach(r => { const d = r.BorrowDate || 'Unknown'; dateCounts[d] = (dateCounts[d] || 0) + 1; });
+    ws2Data.push(['Borrow Date', 'Books Borrowed']);
+    Object.entries(dateCounts).forEach(([d, c]) => ws2Data.push([d, c]));
+  } else if (_reportType === 'books') {
+    // Count books per publisher
+    const pubCounts = {};
+    _reportRows.forEach(r => { const p = r.Publisher || 'Unknown'; pubCounts[p] = (pubCounts[p] || 0) + 1; });
+    ws2Data.push(['Publisher', 'Number of Books']);
+    Object.entries(pubCounts).forEach(([p, c]) => ws2Data.push([p, c]));
+  }
+
+  const ws2 = XLSX.utils.aoa_to_sheet(ws2Data);
+  ws2['!cols'] = [{ wch: 35 }, { wch: 20 }];
+  ws2['!merges'] = [{ s:{r:0,c:0}, e:{r:0,c:1} }];
+
+  // Embed a chart reference note
+  const noteRow = ws2Data.length + 2;
+  XLSX.utils.sheet_add_aoa(ws2,
+    [[], ['NOTE: Select the data range above and insert a chart (Insert → Chart) to visualize this report.']],
+    { origin: noteRow }
+  );
+
+  XLSX.utils.book_append_sheet(wb, ws2, 'Chart Data');
+
+  // ── Download ─────────────────────────────────────────────────
+  const safeName = cfg.title.replace(/[^a-z0-9]/gi,'_');
+  const dateTag  = new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `LIBRI_${safeName}_${dateTag}.xlsx`);
+  showToast(`"${cfg.title}" exported to Excel!`, 'green');
+}
+
+/* ─── PROFILE ────────────────────────────────────────────────── */
+function loadProfileView() {
+  if (!currentUser) return;
+  document.getElementById('profile-fn').value       = currentUser.fn || '';
+  document.getElementById('profile-ln').value       = currentUser.ln || '';
+  document.getElementById('profile-username').value = currentUser.username || '';
+  document.getElementById('profile-email').value    = currentUser.email || '';
+  ['profile-cur-pw','profile-new-pw','profile-conf-pw'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('profile-info-alert').style.display = 'none';
+  document.getElementById('profile-pw-alert').style.display   = 'none';
+}
+
+async function saveProfileInfo() {
+  const fn      = document.getElementById('profile-fn').value.trim();
+  const ln      = document.getElementById('profile-ln').value.trim();
+  const u       = document.getElementById('profile-username').value.trim();
+  const email   = document.getElementById('profile-email').value.trim();
+  const alertEl = document.getElementById('profile-info-alert');
+  const alertMsg= document.getElementById('profile-info-msg');
+  alertEl.className = 'alert';
+
+  if (!fn || !ln || !u) {
+    alertEl.classList.add('alert-red'); alertEl.style.display = 'flex'; alertMsg.textContent = 'First name, last name, and username are required.'; return;
+  }
+
+  const result = await api('update_profile', { first_name: fn, last_name: ln, username: u, email: email || '' });
+  if (result.status === 'success') {
+    if (currentUser) { currentUser.fn = fn; currentUser.ln = ln; currentUser.username = u; currentUser.email = email; }
+    document.getElementById('staff-name').textContent             = fn + ' ' + ln;
+    document.getElementById('staff-avatar-text').textContent      = fn[0].toUpperCase();
+    document.getElementById('profile-big-avatar').textContent     = fn[0].toUpperCase();
+    document.getElementById('profile-banner-name').textContent    = fn + ' ' + ln;
+    document.getElementById('profile-banner-user').textContent    = '@' + u + ' · ' + (currentUser?.role === 'admin' ? 'Admin' : 'Staff');
+    if (localStorage.getItem('lms_user')) localStorage.setItem('lms_user', JSON.stringify(currentUser));
+    alertEl.classList.add('alert-green'); alertEl.style.display = 'flex'; alertMsg.textContent = 'Profile updated successfully!';
+  } else {
+    alertEl.classList.add('alert-red'); alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Update failed.';
+  }
+}
+
+async function saveProfilePassword() {
+  const cur     = document.getElementById('profile-cur-pw').value;
+  const np      = document.getElementById('profile-new-pw').value;
+  const conf    = document.getElementById('profile-conf-pw').value;
+  const alertEl = document.getElementById('profile-pw-alert');
+  const alertMsg= document.getElementById('profile-pw-msg');
+  alertEl.className = 'alert';
+
+  if (!cur || !np || !conf) {
+    alertEl.classList.add('alert-red'); alertEl.style.display = 'flex'; alertMsg.textContent = 'All password fields are required.'; return;
+  }
+  if (np !== conf) {
+    alertEl.classList.add('alert-red'); alertEl.style.display = 'flex'; alertMsg.textContent = 'New passwords do not match.'; return;
+  }
+
+  const result = await api('change_password', { current_password: cur, new_password: np, conf_password: conf });
+  if (result.status === 'success') {
+    ['profile-cur-pw','profile-new-pw','profile-conf-pw'].forEach(id => document.getElementById(id).value = '');
+    alertEl.classList.add('alert-green'); alertEl.style.display = 'flex'; alertMsg.textContent = 'Password changed successfully!';
+  } else {
+    alertEl.classList.add('alert-red'); alertEl.style.display = 'flex'; alertMsg.textContent = result.message || 'Password change failed.';
+  }
+}
+
+/* ─── NAVIGATION ─────────────────────────────────────────────── */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function switchView(view, el) {
+  // Guard: non-admins cannot navigate to accounts view
+  if (view === 'accounts' && currentUser?.role !== 'admin') return;
+
+  document.querySelectorAll('.main-content [id^="view-"]').forEach(v => v.style.display = 'none');
+  document.getElementById('view-' + view).style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  if (view === 'profile') loadProfileView();
+  if (view === 'accounts') loadAccounts(document.getElementById('accounts-search')?.value || '');
+}
+
+function switchTab(el, tabId) {
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  el.closest('.content-area').querySelectorAll('[id^="tab-"]').forEach(d => d.style.display = 'none');
+  document.getElementById(tabId).style.display = 'block';
+}
+
+/* ─── MODALS ─────────────────────────────────────────────────── */
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function overlayClose(e, el) { if (e.target === el) el.classList.remove('open'); }
+
+/* ─── UTILITY ────────────────────────────────────────────────── */
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  try {
+    return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  } catch(e) { return dateStr; }
+}
+
+function filterTable(input, tableId) {
+  const q = input.value.toLowerCase();
+  document.querySelectorAll('#' + tableId + ' tbody tr').forEach(tr => {
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function togglePw(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.querySelector('svg').innerHTML = '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>';
+  } else {
+    inp.type = 'password';
+    btn.querySelector('svg').innerHTML = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>';
+  }
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ─── INIT ───────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  // Set today's date as default for borrow date
+  const today = new Date().toISOString().split('T')[0];
+  const bd = document.getElementById('borrow-date');
+  if (bd) bd.value = today;
+
+  // Check remember me
+  const saved = localStorage.getItem('lms_user');
+  if (saved) {
+    try { const u = JSON.parse(saved); currentUser = u; loadApp(u); } catch(e) {}
+  }
+});
+</script>
+</body>
+</html>
