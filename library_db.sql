@@ -310,7 +310,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Cherie Annaliese','Penrose','admin','admin','$2y$10$Kr5XLN4vwK9v5MqKbrMwSuWPLJ1cIaFxwdDebs0ni7epSFuojIbAe','dearpenrose@gmail.com','active'),(2,'Mheea','Rose','staff','staff1','$2y$10$iIam4cIbbOS/C3dPoQ7qp.D.4qQBfYzQHgoZQwbjIP6yqMCSQCazi',NULL,'active'),(3,'Eve','Rosenberg','staff','staff2','$2y$10$b/Af47eO7XUidQNWFUb6jOruj6c/ZIyv.la6uWN1h4cem0R7GHXCe',NULL,'active'),(4,'Ines','Blanche','staff','staff3','$2y$10$AKNUeQoglwTyuWz1sezC8uazv0nbm5J4kqR9qTvCSbQaPQVSS4due',NULL,'active');
+INSERT INTO `user` VALUES (1,'Cherie Annaliese','Penrose','admin','admin','$2y$10$Kr5XLN4vwK9v5MqKbrMwSuWPLJ1cIaFxwdDebs0ni7epSFuojIbAe','dearpenrose@gmail.com','active'),(2,'Mheea','Rose','staff','staff1','$2y$10$iIam4cIbbOS/C3dPoQ7qp.D.4qQBfYzQHgoZQwbjIP6yqMCSQCazi',NULL,'active'),(3,'Eve','Rosenberg','staff','staff2','$2y$10$b/Af47eO7XUidQNWFUb6jOruj6c/ZIyv.la6uWN1h4cem0R7GHXCe',NULL,'active');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
